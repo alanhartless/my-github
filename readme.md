@@ -1,6 +1,6 @@
 ## My Github
 
-This was a quick and dirty means of showing my branches that had open PRs against them. All other features (not many) were added "just because".
+This was a quick, dirty, and ugly means of showing my branches that had open PRs against them. All other features (not many) were added "just because". Did I mention ugly? Yes, it's ugly.
 
 ### Requirements
 
@@ -27,4 +27,6 @@ Copy `.env.example` to `.env` and fill in the values.
 
 GPLv3
 
-![](http://alan.direct/drop/2015-11-29_19-13-56.png)
+![Personal Repositories](http://alan.direct/drop/2015-11-29_19-13-56.png)
+![Repo Branches with PRs open against self or parent](http://alan.direct/drop/2015-11-29_19-14-31.png)
+![Activity with option for live updates](http://alan.direct/drop/2015-11-29_19-20-11.png)
