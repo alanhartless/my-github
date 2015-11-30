@@ -27,6 +27,18 @@ Copy `.env.example` to `.env` and fill in the values.
 
 GPLv3
 
-![Personal Repositories](http://alan.direct/drop/2015-11-29_19-13-56.png)
-![Repo Branches with PRs open against self or parent](http://alan.direct/drop/2015-11-29_19-14-31.png)
-![Activity with option for live updates](http://alan.direct/drop/2015-11-29_19-20-11.png)
+### Screenshots
+Personal and Organization Repositories
+![](http://alan.direct/drop/2015-11-29_19-13-56.png)
+
+Personal Repository Branches with open PRs by authenticated user 
+![](http://alan.direct/drop/2015-11-29_19-14-31.png)
+
+Organization Repository Branches with number of PRs and Issues authenticated user created
+![](http://alan.direct/drop/2015-11-29_19-23-19.png)
+
+Activity feed with option for live updates
+![](http://alan.direct/drop/2015-11-29_19-20-11.png)
+
+
+
