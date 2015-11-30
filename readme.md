@@ -26,3 +26,5 @@ Copy `.env.example` to `.env` and fill in the values.
 ### License
 
 GPLv3
+
+![](http://alan.direct/drop/2015-11-29_19-13-56.png)
