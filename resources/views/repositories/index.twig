@@ -1,0 +1,29 @@
+{% extends "index" %}
+
+{% block title %}
+    Repositories
+{% endblock %}
+
+{% block content %}
+<div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#personal" aria-controls="personal" role="tab" data-toggle="tab">personal <span class="badge">{{ repos|length }}</span></a></li>
+        {% for org in orgs %}
+            <li role="presentation"><a href="#{{ org.login }}" aria-controls="{{ org.login }}" role="tab" data-toggle="tab">{{ org.login }} <span class="badge">{{ org.repositories|length }}</span></a></li>
+        {% endfor %}
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="personal">
+            {{ include('repositories.list', {'repos': repos, 'login': me.login}) }}
+        </div>
+        {% for org in orgs %}
+            <div role="tabpanel" class="tab-pane" id="{{ org.login }}">
+                {{ include('repositories.list', {'repos': org.repositories, 'login': org.login}) }}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "index" %}
+
+{% block title %}
+    Activity
+{% endblock %}
+
+{% block nav_right %}
+    <a href="javascript:void(0)" id="live-activity" class="btn btn-default" data-live-url="{{ URL.route('get_live_activity') }}" data-poll-interval="{{ interval }}" style="margin-left: 10px;"><i class="fa fa-refresh"></i></a>
+{% endblock %}
+
+{% block content %}
+    <div class="table-responsive">
+        <table id="activity" class="table table-bordered table-hover table-striped">
+            <thead>
+                <th>Date/Time</th>
+                <th>Repo</th>
+                <th>Event</th>
+                <th>Actor</th>
+                <th>Action</th>
+                <th>Description</th>
+            </thead>
+            <tbody class="searchable">
+                {% for event in activity %}
+                    {{ include('activity.row', {'event': event}) }}
+                {% endfor %}
+            </tbody>
+            {% if pagination.prev or pagination.next %}
+            <tfoot>
+                <th colspan="6">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="{% if pagination.first is null %}disabled{% endif %}">
+                                <a href="{% if pagination.first is null %}javascript:void(0){% else %}{{ URL.route('activity', {page: pagination.first}) }}{% endif %}">
+                                    <i class="fa fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            {% for i in 1..pagination.count %}
+                                <li class="{% if page == i %}disabled{% endif %}">
+                                    <a href="{% if page == i %}javascript:void(0){% else %}{{ URL.route('activity', {page: i}) }}{% endif %}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                            <li class="{% if pagination.last is null %}disabled{% endif %}">
+                                <a href="{% if pagination.last is null %}javascript:void(0){% else %}{{ URL.route('activity', {page: pagination.last}) }}{% endif %}">
+                                    <i class="fa fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </th>
+            </tfoot>
+            {% endif %}
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "devDependencies": {
+    "gulp": "^3.8.8"
+  },
+  "dependencies": {
+    "laravel-elixir": "^3.0.0",
+    "bootstrap-sass": "^3.0.0",
+    "jquery": "^2.0.0",
+    "font-awesome": "^4.0.0"
+  }
+}

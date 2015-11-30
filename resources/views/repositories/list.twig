@@ -1,0 +1,29 @@
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+        <th>Repository</th>
+        <th class="hidden-xs">Last Updated</th>
+        <th></th>
+    </thead>
+    <tbody class="searchable">
+    {% for repo in repos %}
+        <tr>
+            <td>
+                <i class="fa fa-{% if repo.private %}key{% else %}globe{% endif %}"></i>
+                <a href="{{ repo.html_url }}" target="_blank" data-toggle="tooltip" title="{{ repo.description }}" data-placement="bottom">{{ repo.name }}</a>
+            </td>
+            <td class="hidden-xs">
+                {{ repo.updated_at|date('Y-m-d H:i') }}
+            </td>
+            <td class="text-right">
+                <a class="btn btn-sm btn-danger" href="{{ URL.route('branches', {'login':login, 'repo':repo.name}) }}"><i class="fa fa-sitemap visible-xs"></i><span class="hidden-xs">Branches</span></a>
+                <a class="btn btn-sm btn-primary" href="{{ repo.html_url }}/pulls?q=author:{{ me.login }}" target="_blank">
+                    <i class="fa fa-random visible-xs"></i> <span class="hidden-xs">PRs</span> <span class="badge hidden-xs">{{ repo.pulls|length }}</span>
+                </a>
+                <a class="btn btn-sm btn-success" href="{{ repo.html_url }}/issues?q=author:{{ me.login }}+is:issue" target="_blank">
+                    <i class="fa fa-question visible-xs"></i> <span class="hidden-xs">Issues</span> <span class="badge hidden-xs"> {{ repo.issues|length }}</span>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,3 @@
+{% for event in activity %}
+    {{ include('activity.row', {'event': event, 'isLive': true}) }}
+{% endfor %}
