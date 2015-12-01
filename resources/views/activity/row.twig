@@ -1,20 +1,20 @@
 <tr{% if isLive == true %}  class="warning"{% endif %}>
     <td>{{ event.created_at|date('Y-m-d H:i') }}</td>
-    <td><a href="{{ event.repo.url }}" target="_blank">{{ event.repo.name }}</a></td>
+    <td><a href="https://github.com/{{ event.repo.name }}" target="_blank">{{ event.repo.name }}</a></td>
     <td>{{ event.type }}</td>
-    <td><a href="{{ event.actor.url }}" target="_blank">{{ event.actor.login }}</a></td>
+    <td><a href="https://github.com/{{ event.actor.login }}" target="_blank">{{ event.actor.login }}</a></td>
     <td>{{ event.payload.action }}</td>
     <td>
         <dl class="dl-horizontal">
             {% if event.payload.pull_request %}
-                <dt><a href="{{ event.payload.pull_request.url }}" target="_blank">Title:</a></dt>
+                <dt><a href="{{ event.payload.pull_request.html_url }}" target="_blank">Title:</a></dt>
                 <dd>{{ event.payload.pull_request.title }}</dd>
                 {% if not event.payload.comment and event.payload.pull_request.body%}
                     <dt>Body:</dt>
                     <dd>{{ Markdown.convertToHtml(event.payload.pull_request.body)|raw }}</dd>
                 {% endif %}
             {% elseif event.payload.issue %}
-                <dt><a href="{{ event.payload.issue.url }}" target="_blank">Title:</a></dt>
+                <dt><a href="{{ event.payload.issue.html_url }}" target="_blank">Title:</a></dt>
                 <dd>{{ event.payload.issue.title }}</dd>
                 {% if not event.payload.comment and event.payload.issue.body%}
                     <dt>Body:</dt>
@@ -22,7 +22,7 @@
                 {% endif %}
             {% endif %}
             {% if event.payload.comment %}
-                <dt><a href="{{ event.payload.comment.url }}">Comment:</a></dt>
+                <dt><a href="{{ event.payload.comment.html_url }}" target="_blank">Comment:</a></dt>
                 <dd>{{ Markdown.convertToHtml(event.payload.comment.body)|raw }}</dd>
             {% endif %}
             {% if event.payload.issue.labels %}
