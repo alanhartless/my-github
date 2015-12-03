@@ -1,0 +1,7 @@
+<tr{% if isLive == true %}  class="warning"{% endif %}>
+    <td>{{ event.updated_at|date('Y-m-d H:i') }}</td>
+    <td><a href="{{ event.repository.html_url }}" target="_blank">{{ event.repository.full_name }}</a></td>
+    <td>{{ event.reason }}</td>
+    <td>{{ event.subject.type }}</td>
+    <td><a href="{{ event.html_url }}" target="_blank">{{ event.subject.title }}</a></td>
+</tr>

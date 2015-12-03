@@ -39,6 +39,10 @@ Route::group(['before' => 'auth.basic'], function() {
     Route::get('activity/live', ['as' => 'get_live_activity', 'uses' => 'Activity\LiveController@getActivity']);
     Route::get('activity/{page?}', ['as' => 'activity', 'uses' => 'Activity\IndexController@showIndex']);
 
+    // Notifications
+    Route::get('notifications/live', ['as' => 'get_live_notifications', 'uses' => 'Notifications\LiveController@getActivity']);
+    Route::get('notifications/{page?}', ['as' => 'notifications', 'uses' => 'Notifications\IndexController@showIndex']);
+
     // Branch management
     Route::post('delete/{login}/{repo}/{branch}', ['as' => 'delete_branch', 'uses' => 'Branches\deleteController@deleteBranch']);
 });

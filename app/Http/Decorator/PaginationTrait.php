@@ -20,18 +20,20 @@ trait PaginationTrait
             'count' => 0
         ];
 
-        foreach ($ghPagination as $key => $url) {
-            if (preg_match('/(.*?)\?page=(.*?)$/', $url, $match)) {
-                $pagination[$key] = (int) $match[2];
+        if ($ghPagination) {
+            foreach ($ghPagination as $key => $url) {
+                if (preg_match('/(.*?)\?page=(.*?)$/', $url, $match)) {
+                    $pagination[$key] = (int) $match[2];
+                }
             }
-        }
 
-        if (null !== $pagination['last']) {
-            $pagination['count'] = $pagination['last'];
-        } elseif (null !== $pagination['next']) {
-            $pagination['count'] = $pagination['next'];
-        } elseif (null !== $pagination['prev']) {
-            $pagination['count'] = $pagination['prev'] + 1;
+            if (null !== $pagination['last']) {
+                $pagination['count'] = $pagination['last'];
+            } elseif (null !== $pagination['next']) {
+                $pagination['count'] = $pagination['next'];
+            } elseif (null !== $pagination['prev']) {
+                $pagination['count'] = $pagination['prev'] + 1;
+            }
         }
 
         return $pagination;
