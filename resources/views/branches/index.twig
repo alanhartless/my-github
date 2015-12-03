@@ -22,13 +22,20 @@
                         <i class="fa fa-random visible-xs"></i> <span class="hidden-xs">PRs</span> <span class="badge hidden-xs">{{ branch.pulls|length }}</span>
                     </a>
                     {% elseif branch.pulls|length == 1 %}
-                    <a class="btn btn-sm btn-primary" href="{{ branch.pulls[0].html_url }}" target="_blank">
+                    <a class="btn btn-sm btn-primary" href="{{ branch.pulls[0].html_url }}" target="_blank" data-toggle="tooltip" title="{{ branch.pulls[0].title }}">
                         <i class="fa fa-random visible-xs"></i> <span class="hidden-xs">PR</span>
                     </a>
-                    {% elseif branch.name != 'staging' and branch.name != 'master' %}
-                    <a class="btn btn-sm btn-danger" data-toggle="modal"  data-target="#confirmDelete" data-branch="{{ branch.name }}" data-delete-url="{{ URL.route('delete_branch', {'login':login, 'repo':repo, 'branch':branch.name}) }}">
-                        <i class="fa fa-trash visible-xs"></i> <span class="hidden-xs">Delete</span>
-                    </a>
+                    {% else %}
+                        {% if branch.name != 'staging' and branch.name != 'master' %}
+                        <a class="btn btn-sm btn-danger" data-toggle="modal"  data-target="#confirmDelete" data-branch="{{ branch.name }}" data-delete-url="{{ URL.route('delete_branch', {'login':login, 'repo':repo, 'branch':branch.name}) }}">
+                            <i class="fa fa-trash visible-xs"></i> <span class="hidden-xs">Delete</span>
+                        </a>
+                        {% endif %}
+                        {% if branch.name != defaultBranch  %}
+                        <a class="btn btn-sm btn-success" target="_blank" href="https://github.com/{{ login }}/{{ repo }}/compare/{{ branch.name }}?expand=1">
+                            <i class="fa fa-sitemap visible-xs"></i> <span class="hidden-xs">New PR</span>
+                        </a>
+                        {% endif %}
                     {% endif %}
                 </td>
             </tr>

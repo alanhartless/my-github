@@ -14,11 +14,17 @@ class IndexController extends Controller
     public function showIndex($login, $repo)
     {
         $repoInfo = GitHub::repos()->show($login, $repo);
-        $pullFrom = ($repoInfo['fork']) ? $repoInfo['parent']['owner']['login'] : $login;
+        if ($repoInfo['fork']) {
+            $pullFrom      = $repoInfo['parent']['owner']['login'];
+            $defaultBranch = $repoInfo['parent']['default_branch'];
+        } else {
+            $pullFrom      = $login;
+            $defaultBranch = $repoInfo['default_branch'];
+        }
 
         if ($pullFrom != $login) {
             // Get pulls requests from issue list
-            $pulls  = [];
+            $pulls = [];
 
             $paginator = new ResultPager(GitHub::connection());
             $issues    = $paginator->fetchAll(
@@ -45,12 +51,14 @@ class IndexController extends Controller
         // Get branches for this repo
         $branches = GitHub::gitData()->references()->branches($login, $repo);
         foreach ($branches as &$branch) {
-            $branch['name']  = str_replace('refs/heads/', '', $branch['ref']);
+            $branch['name'] = str_replace('refs/heads/', '', $branch['ref']);
 
             if ($pullFrom == $login) {
-                $branch['pulls'] = GitHub::pullRequests()->all($pullFrom, $repo,
+                $branch['pulls'] = GitHub::pullRequests()->all(
+                    $pullFrom,
+                    $repo,
                     [
-                        'base'   => $branch['name']
+                        'base' => $branch['name']
                     ]
                 );
             } else {
@@ -58,12 +66,14 @@ class IndexController extends Controller
             }
         }
 
-        return view('branches.index',
+        return view(
+            'branches.index',
             [
-                'login'      => $login,
-                'repo'       => $repo,
-                'branches'   => $branches,
-                'rateLimits' => $this->getRateLimit()
+                'login'         => $login,
+                'repo'          => $repo,
+                'branches'      => $branches,
+                'rateLimits'    => $this->getRateLimit(),
+                'defaultBranch' => $defaultBranch
             ]
         );
     }
