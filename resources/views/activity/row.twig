@@ -6,6 +6,10 @@
     <td>{{ event.payload.action }}</td>
     <td>
         <dl class="dl-horizontal">
+            {% if event.pull_request %}
+                <dt><a href="{{ event.pull_request.repo.html_url }}/tree/{{ event.pull_request.head.ref }}" target="_blank">Branch:</a></dt>
+                <dd>{{ event.pull_request.head.ref }}</dd>
+            {% endif %}
             {% if event.payload.pull_request %}
                 <dt><a href="{{ event.payload.pull_request.html_url }}" target="_blank">Title:</a></dt>
                 <dd>{{ event.payload.pull_request.title }}</dd>

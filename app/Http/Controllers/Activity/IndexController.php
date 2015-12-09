@@ -30,6 +30,14 @@ class IndexController extends Controller
         // Save the latest activity ID for live fetching
         if (count($activity)) {
             $request->session()->put('last_event_id', $activity[0]['id']);
+
+            foreach ($activity as &$event) {
+                if (isset($event['payload']['issue']['pull_request'])) {
+                    // Get the related PR
+                    list($login, $repo) = explode('/', $event['repo']['name']);
+                    $event['pull_request'] = GitHub::pullRequest()->show($login, $repo, $event['payload']['issue']['number']);
+                }
+            }
         }
 
         // Get the interval Github allows for polling
