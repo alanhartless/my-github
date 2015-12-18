@@ -30,17 +30,17 @@
                     <nav>
                         <ul class="pagination">
                             <li class="{% if pagination.first is null %}disabled{% endif %}">
-                                <a href="{% if pagination.first is null %}javascript:void(0){% else %}{{ URL.route('activity', {page: pagination.first}) }}{% endif %}">
+                                <a href="{% if pagination.first is null %}javascript:void(0){% else %}{{ URL.route('activity', {page: pagination.first, pending: pending}) }}{% endif %}">
                                     <i class="fa fa-angle-double-left"></i>
                                 </a>
                             </li>
                             {% for i in 1..pagination.count %}
                                 <li class="{% if page == i %}disabled{% endif %}">
-                                    <a href="{% if page == i %}javascript:void(0){% else %}{{ URL.route('activity', {page: i}) }}{% endif %}">{{ i }}</a>
+                                    <a href="{% if page == i %}javascript:void(0){% else %}{{ URL.route('activity', {page: i, pending: pending}) }}{% endif %}">{{ i }}</a>
                                 </li>
                             {% endfor %}
                             <li class="{% if pagination.last is null %}disabled{% endif %}">
-                                <a href="{% if pagination.last is null %}javascript:void(0){% else %}{{ URL.route('activity', {page: pagination.last}) }}{% endif %}">
+                                <a href="{% if pagination.last is null %}javascript:void(0){% else %}{{ URL.route('activity', {page: pagination.last, pending: pending  }) }}{% endif %}">
                                     <i class="fa fa-angle-double-right"></i>
                                 </a>
                             </li>
@@ -50,5 +50,6 @@
             </tfoot>
             {% endif %}
         </table>
+        <input type="hidden" id="pending" value="{{ pending }}" />
     </div>
 {% endblock %}

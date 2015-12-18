@@ -5,26 +5,13 @@ function setAlert(message, type) {
     }, 10000);
 }
 
-var liveActivityInterval;
-var liveActivityCounter = 0;
-var liveActivityFocus = true;
-
-$(window).on("blur focus", function(e) {
-    liveActivityFocus = (e.type == 'focus');
-    if (liveActivityFocus) {
-        liveActivityCounter = 0;
-
-        // Remove color background after 10 seconds
-        setTimeout(function() {
-            $('tr.warning').removeClass('warning');
-            document.title = 'Activity';
-        }, 5000)
-    }
-});
-
 function getLiveActivity() {
+    var url = $('#live-activity').data('live-url');
+    if ($('#pending').length) {
+        url = url + '?pending=' + $('#pending').val();
+    }
     $.ajax({
-        url: $('#live-activity').data('live-url'),
+        url: url,
         success: function(response) {
             // Update activity
             if (response.activity) {
@@ -54,7 +41,39 @@ function getLiveActivity() {
     });
 }
 
+function replyToActivity(id) {
+    $.ajax({
+        url: $('#'+id).data('reply-url'),
+        method: 'post',
+        data: { reply: $('#'+id).val() },
+        success: function(response) {
+            if (response.success) {
+                $('button[data-submit="'+id+'"]').removeClass('btn-primary').addClass('btn-success').text('Submitted');
+            } else if (response.error) {
+                $('button[data-submit="'+id+'"]').removeClass('btn-primary').addClass('btn-danger').text('Error');
+                $('button[data-submit="'+id+'"]').next('.help-block').text(response.error);
+            }
+        }
+    });
+}
+
 var liveActivityInterval;
+var liveActivityCounter = 0;
+var liveActivityFocus = true;
+
+$(window).on("blur focus", function(e) {
+    liveActivityFocus = (e.type == 'focus');
+    if (liveActivityFocus) {
+        liveActivityCounter = 0;
+
+        // Remove color background after 10 seconds
+        setTimeout(function() {
+            $('tr.warning').removeClass('warning');
+            document.title = 'Activity';
+        }, 5000)
+    }
+});
+
 $(document).ready( function() {
     // Make laravel CSRF happy
     $.ajaxSetup({
@@ -145,4 +164,33 @@ $(document).ready( function() {
             }
         });
     }
+
+    // Thumbnail images
+    $('table img').each(function() {
+       $(this).css({
+               maxWidth: '300px',
+               cursor: 'pointer'
+           }).addClass('img img-thumbnail');
+        $(this).on('click', function() {
+            var clone = $(this).clone();
+            $(clone).css('max-width', '100%');
+            $('#image-modal .modal-body').html($(clone));
+
+            $('#image-modal').modal('show');
+        });
+    });
+
+    // Reply buttons
+    $('button[data-submit]').each(function() {
+        $(this).on('click', function() {
+            var reply = $(this).data('submit');
+
+            if ($('#'+reply).val()) {
+                $('#' + reply).prop('disabled', true);
+                $(this).prop('disabled', true);
+
+                replyToActivity(reply);
+            }
+        });
+    });
 });

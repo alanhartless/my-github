@@ -38,6 +38,7 @@ Route::group(['before' => 'auth.basic'], function() {
     // Activity
     Route::get('activity/live', ['as' => 'get_live_activity', 'uses' => 'Activity\LiveController@getActivity']);
     Route::get('activity/{page?}', ['as' => 'activity', 'uses' => 'Activity\IndexController@showIndex']);
+    Route::post('comment/reply/{login}/{repo}/{issue}', ['as' => 'comment_reply', 'uses' => 'Activity\ReplyController@reply']);
 
     // Notifications
     Route::get('notifications/live', ['as' => 'get_live_notifications', 'uses' => 'Notifications\LiveController@getActivity']);

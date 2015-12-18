@@ -1,4 +1,4 @@
-<tr{% if isLive == true %}  class="warning"{% endif %}>
+<tr id="event-{{ event.id }}"{% if isLive == true %} class="warning"{% endif %}>
     <td>{{ event.created_at|date('Y-m-d H:i') }}</td>
     <td><a href="https://github.com/{{ event.repo.name }}" target="_blank">{{ event.repo.name }}</a></td>
     <td>{{ event.type }}</td>
@@ -6,36 +6,112 @@
     <td>{{ event.payload.action }}</td>
     <td>
         <dl class="dl-horizontal">
-            {% if event.pull_request %}
-                <dt><a href="{{ event.pull_request.repo.html_url }}/tree/{{ event.pull_request.head.ref }}" target="_blank">Branch:</a></dt>
-                <dd>{{ event.pull_request.head.ref }}</dd>
+            {% if event.payload.issue.labels or event.payload.pull_request.labels%}
+                <dt></dt>
+                <dd>
+                    {% if event.payload.issue.labels %}
+                        {% set labels = event.payload.issue.labels %}
+                    {% else %}
+                        {% set labels = event.payload.pull_request.labels %}
+                    {% endif %}
+
+                    {% for label in labels %}
+                        <span class="label label-default" style="background-color: #{{ label.color }}; color: {% if label.is_light %}#000000{% else %}#ffffff{% endif %};">{{ label.name }}</span>
+                    {% endfor %}
+                </dd>
+            {% endif %}
+            {% if event.state %}
+            <dt>State:</dt>
+            <dd><span class="label label-{% if event.state == 'closed' %}danger{% elseif event.state == 'open' %}success{% else %}primary{% endif %}">{{ event.state }}</span></dd>
             {% endif %}
             {% if event.payload.pull_request %}
                 <dt><a href="{{ event.payload.pull_request.html_url }}" target="_blank">Title:</a></dt>
                 <dd>{{ event.payload.pull_request.title }}</dd>
                 {% if not event.payload.comment and event.payload.pull_request.body%}
                     <dt>Body:</dt>
-                    <dd>{{ Markdown.convertToHtml(event.payload.pull_request.body)|raw }}</dd>
+                    <dd><blockquote>{{ Markdown.convertToHtml(event.payload.pull_request.body)|raw }}</blockquote></dd>
                 {% endif %}
             {% elseif event.payload.issue %}
                 <dt><a href="{{ event.payload.issue.html_url }}" target="_blank">Title:</a></dt>
                 <dd>{{ event.payload.issue.title }}</dd>
                 {% if not event.payload.comment and event.payload.issue.body%}
                     <dt>Body:</dt>
-                    <dd>{{ Markdown.convertToHtml(event.payload.issue.body)|raw }}</dd>
+                    <dd><blockquote>{{ Markdown.convertToHtml(event.payload.issue.body)|raw }}</blockquote></dd>
                 {% endif %}
             {% endif %}
+
             {% if event.payload.comment %}
                 <dt><a href="{{ event.payload.comment.html_url }}" target="_blank">Comment:</a></dt>
-                <dd>{{ Markdown.convertToHtml(event.payload.comment.body)|raw }}</dd>
+                <dd><blockquote>{{ Markdown.convertToHtml(event.payload.comment.body)|raw }}</blockquote></dd>
+
+                {% if event.payload.comment.diff_hunk %}
+                    <dt>Diff:</dt>
+                    <dd>
+                        <pre>{{ event.payload.comment.diff_hunk }}</pre>
+                    </dd>
+                {% endif %}
             {% endif %}
-            {% if event.payload.issue.labels %}
-                <dt>Labels:</dt>
+
+            {% if event.pull_request %}
+                <dt><a href="{{ event.pull_request.repo.html_url }}/tree/{{ event.pull_request.head.ref }}" target="_blank">Branch:</a></dt>
+                <dd>{{ event.pull_request.head.label }}</dd>
+            {% endif %}
+
+            {% if event.payload.issue.milestone %}
+                <dt><a href="{{ event.payload.issue.milestone.html_url }}" target="_blank">Milestone:</a></dt>
+                <dd>{{ event.payload.issue.milestone.title }}</dd>
+            {% elseif event.payload.pull_request.milestone %}
+                <dt><a href="{{ event.payload.pull_request.milestone.html_url }}" target="_blank">Milestone:</a></dt>
+                <dd>{{ event.payload.pull_request.milestone.title }}</dd>
+            {% endif %}
+
+            {% if event.payload.commits %}
+                <dt>Commits:</dt>
                 <dd>
-                    {% for label in event.payload.issue.labels %}
-                        <span class="label label-default" style="background-color: #{{ label.color }}">{{ label.name }}</span>
+                    <ul>
+                    {% for commit in event.payload.commits %}
+                        <li>{{ commit.message }}</li>
                     {% endfor %}
+                    </ul>
                 </dd>
+            {% endif %}
+
+            {% if event.payload.issue or event.payload.pull_request %}
+                {% if event.payload.issue.number %}
+                    {% set issueNumber = event.payload.issue.number %}
+                {% elseif event.payload.number %}
+                    {% set issueNumber = event.payload.number %}
+                {% else %}
+                    {% set issueNumber = false %}
+                {% endif %}
+
+                {% if issueNumber %}
+                    {% if event.comments and event.comments[0].id != event.payload.comment.id %}
+                        <dt>Latest Reply:</dt>
+                        <dd>
+                            <p>
+                                <strong>Author:</strong> {{ event.comments[0].user.login }}
+                            </p>
+                            <p>
+                                <strong>Date/Time:</strong> {{ event.comments[0].created | date('Y-m-d H:i') }}
+                            </p>
+                            <p>
+                                <strong>Body:</strong><br />
+                                <blockquote>
+                                {{ Markdown.convertToHtml(event.comments[0].body)|raw }}
+                                </blockquote>
+                            </p>
+                        </dd>
+                    {% endif %}
+                    <dt style="margin-top: 25px;">Reply:</dt>
+                    <dd style="margin-top: 25px;">
+                        <textarea class="form-control" id="reply-{{ event.id }}" data-reply-url="{{ URL.route('comment_reply', {login: event.repo_owner, repo: event.repo_name, issue: issueNumber}) }}"></textarea>
+                        <div style="margin-top: 10px;" class="has-error">
+                            <button class="btn btn-primary btn-sm" data-submit="reply-{{ event.id }}">Submit</button>
+                            <span class="help-block"></span>
+                        </div>
+                    </dd>
+                {% endif %}
             {% endif %}
         </dl>
     </td>

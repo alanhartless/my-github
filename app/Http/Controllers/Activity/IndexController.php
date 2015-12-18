@@ -3,17 +3,20 @@
 namespace App\Http\Controllers\Activity;
 
 use App\Http\Controllers\Controller;
+use App\Http\Decorator\ActivityParserTrait;
 use App\Http\Decorator\PaginationTrait;
 use App\Http\Decorator\RateLimitTrait;
 use Github\HttpClient\Message\ResponseMediator;
 use GrahamCampbell\GitHub\Facades\GitHub;
 use Guzzle\Http\Message\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class IndexController extends Controller
 {
     use RateLimitTrait;
     use PaginationTrait;
+    use ActivityParserTrait;
 
     public function showIndex(Request $request, $page = 1)
     {
@@ -26,18 +29,13 @@ class IndexController extends Controller
 
         $activity   = ResponseMediator::getContent($response);
         $pagination = $this->getPagination($response);
+        $pending    = Input::get('pending', 0);
 
         // Save the latest activity ID for live fetching
         if (count($activity)) {
             $request->session()->put('last_event_id', $activity[0]['id']);
 
-            foreach ($activity as &$event) {
-                if (isset($event['payload']['issue']['pull_request'])) {
-                    // Get the related PR
-                    list($login, $repo) = explode('/', $event['repo']['name']);
-                    $event['pull_request'] = GitHub::pullRequest()->show($login, $repo, $event['payload']['issue']['number']);
-                }
-            }
+            $this->parseActivity($activity, $me, $pending);
         }
 
         // Get the interval Github allows for polling
@@ -50,7 +48,8 @@ class IndexController extends Controller
                 'activity'   => $activity,
                 'pagination' => $pagination,
                 'page'       => $page,
-                'interval'   => (int) $interval * 1000
+                'interval'   => (int) $interval * 1000,
+                'pending'    => $pending
             ]
         );
     }

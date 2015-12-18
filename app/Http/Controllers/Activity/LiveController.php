@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Activity;
 
 use App\Http\Controllers\Controller;
+use App\Http\Decorator\ActivityParserTrait;
 use App\Http\Decorator\PaginationTrait;
 use App\Http\Decorator\RateLimitTrait;
 use Github\HttpClient\Message\ResponseMediator;
 use GrahamCampbell\GitHub\Facades\GitHub;
 use Guzzle\Http\Message\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class LiveController extends Controller
 {
+    use ActivityParserTrait;
+
     public function getActivity(Request $request)
     {
         $me          = GitHub::me()->show();
@@ -24,6 +28,8 @@ class LiveController extends Controller
 
             if ($activity) {
                 $request->session()->set('last_event_id', $activity[0]['id']);
+
+                $this->parseActivity($activity, $me, Input::get('pending', 0));
             }
         }
 
