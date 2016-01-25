@@ -44,7 +44,5 @@ return [
             'baseUrl' => env('GITHUB_API_BASEURL', 'https://api.github.com/'),
             'version' => env('GITHUB_API_VERSION', 'v3'),
         ],
-
     ],
-
 ];

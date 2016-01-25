@@ -6,6 +6,12 @@
 
 {% block nav_right %}
     <a href="javascript:void(0)" id="live-activity" class="btn btn-default" data-live-url="{{ URL.route('get_live_activity') }}" data-poll-interval="{{ interval }}" style="margin-left: 10px;"><i class="fa fa-refresh"></i></a>
+    {% if (pending) %}
+    <a href="{{ URL.route('activity', {page: pagination.first, pending: 0}) }}" id="live-activity" class="btn btn-primary"style="margin-left: 10px;"><i class="fa fa-reply"></i></a>
+        {% else %}
+    <a href="{{ URL.route('activity', {page: pagination.first, pending: 1}) }}" id="live-activity" class="btn btn-default"style="margin-left: 10px;"><i class="fa fa-reply"></i></a>
+    {% endif %}
+
 {% endblock %}
 
 {% block content %}

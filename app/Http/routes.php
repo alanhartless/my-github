@@ -45,7 +45,10 @@ Route::group(['before' => 'auth.basic'], function() {
     Route::get('notifications/{page?}', ['as' => 'notifications', 'uses' => 'Notifications\IndexController@showIndex']);
 
     // Branch management
-    Route::post('delete/{login}/{repo}/{branch}', ['as' => 'delete_branch', 'uses' => 'Branches\deleteController@deleteBranch']);
+    Route::post('delete/{login}/{repo}/{branch}', ['as' => 'delete_branch', 'uses' => 'Branches\DeleteController@deleteBranch']);
+
+    // Changelog
+    Route::get('milestone/{login}/{repo}/{milestone}/changelog', ['as' => 'changelog', 'uses' => 'Milestones\ChangelogController@generate']);
 });
 
 // Logout

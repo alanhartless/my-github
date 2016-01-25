@@ -1,0 +1,23 @@
+{% extends "index" %}
+
+{% block title %}
+    Changelog for {{ milestone }}
+{% endblock %}
+
+{% block content %}
+<pre>
+## Change Log
+{% for label, prs in pullRequests %}
+
+### {{ label }}
+{% for pr in prs %}
+- [#{{ pr.number }}]({{ pr.pull_request.html_url }}) {{ pr.title }}{% if pr.submitter %} (@{{ pr.submitter }}){% endif %}
+
+{% endfor %}
+{% endfor %}
+{% if acknowledgements %}
+
+A big thank you to the following community members for contributing to this release: {{ acknowledgements }}
+{% endif %}
+</pre>
+{% endblock %}
