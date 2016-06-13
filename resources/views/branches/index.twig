@@ -23,7 +23,7 @@
                     </a>
                     {% elseif branch.pulls|length == 1 %}
                     <a class="btn btn-sm btn-primary" href="{{ branch.pulls[0].html_url }}" target="_blank" data-toggle="tooltip" title="{{ branch.pulls[0].title }}">
-                        <i class="fa fa-random visible-xs"></i> <span class="hidden-xs">PR</span>
+                        <i class="fa fa-random visible-xs"></i> <span class="hidden-xs">PR <i class="fa fa-{% if branch.pulls[0].mergeable %}check{% else %}times{% endif %}"></i></span>
                     </a>
                     {% else %}
                         {% if branch.name != 'staging' and branch.name != 'master' %}
