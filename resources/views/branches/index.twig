@@ -32,7 +32,7 @@
                         </a>
                         {% endif %}
                         {% if branch.name != defaultBranch  %}
-                        <a class="btn btn-sm btn-success" target="_blank" href="https://github.com/{{ login }}/{{ repo }}/compare/{{ branch.name }}?expand=1">
+                        <a class="btn btn-sm btn-{% if branch.comparison == "behind" %}warning{% else %}success{% endif %}" target="_blank" href="https://github.com/{{ login }}/{{ repo }}/compare/{{ branch.name }}?expand=1" data-toggle="tooltip" title="{{ branch.comparison }}">
                             <i class="fa fa-sitemap visible-xs"></i> <span class="hidden-xs">New PR</span>
                         </a>
                         {% endif %}

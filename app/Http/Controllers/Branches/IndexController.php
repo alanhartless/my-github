@@ -23,6 +23,8 @@ class IndexController extends Controller
         }
 
         if ($pullFrom != $login) {
+            $parentBranch = GitHub::repos()->branches($pullFrom, $repo, $defaultBranch);
+
             // Get pulls requests from issue list
             $pulls = [];
 
@@ -63,6 +65,12 @@ class IndexController extends Controller
                 );
             } else {
                 $branch['pulls'] = (isset($pulls[$branch['name']])) ? $pulls[$branch['name']] : [];
+            }
+
+            if (empty($branch['pulls']) && isset($parentBranch)) {
+                // Check to see if there are PR changes
+                $compare = GitHub::repos()->commits()->compare($login, $repo, "$pullFrom:$defaultBranch", "$login:{$branch['name']}");
+                $branch['comparison'] = $compare['status'];
             }
         }
 
