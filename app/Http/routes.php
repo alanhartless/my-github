@@ -49,6 +49,7 @@ Route::group(['before' => 'auth.basic'], function() {
 
     // Changelog
     Route::get('milestone/{login}/{repo}/{milestone}/changelog', ['as' => 'changelog', 'uses' => 'Milestones\ChangelogController@generate']);
+    Route::get('milestone/{login}/{repo}/{milestone}/analysis', ['as' => 'analysis', 'uses' => 'Milestones\AnalysisController@generate']);
 });
 
 // Logout

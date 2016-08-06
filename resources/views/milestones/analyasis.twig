@@ -1,0 +1,37 @@
+{% extends "index" %}
+
+{% block title %}
+    Analysis for {{ milestone.name }}
+{% endblock %}
+
+{% block content %}
+<a href="{{ milestone.html_url }}">{{ milestone.html_url }}</a>
+<table class="table table-responsive table-bordered">
+    <thead>
+    <tr>
+        <th>Author</th>
+        <th>Status</th>
+        <th>ID</th>
+        <th>Pull Request</th>
+        <th>Has Conflicts?</th>
+        <th>Needs Documentation?</th>
+        <th>Plus One By</th>
+        <th>Feedback Given By</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for pullId, pr in pullRequests %}
+    <tr>
+        <td>{{ pr.author }}</td>
+        <td>{{ pr.status }}</td>
+        <td>{{ pullId }}</td>
+        <td><a href="{{ pr.link }}">{{ pr.name }}</a></td>
+        <td>{% if (pr.hasConflicts) %}<span class="text-danger">YES</span>{% else %}NO{% endif %}</td>
+        <td>{% if (pr.needsDocs) %}YES{% else %}NO{% endif %}</td>
+        <td>{% for key, approved in pr.plusOne %}{{ approved }}, {% endfor %}</td>
+        <td>{% for key, feedback in pr.feedbackBy %}{{ feedback }}, {% endfor %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
