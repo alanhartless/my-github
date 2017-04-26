@@ -35,14 +35,14 @@ class ChangelogController extends Controller
         $issues           = [];
         $acknowledgements = [];
         $labels           = [];
-        $hideAuthors      = explode(',', $_SERVER['GITHUB_HIDE_AUTHORS']);
-        $labelGroups      = explode(',', $_SERVER['GITHUB_LABELS']);
+        $hideAuthors      = explode(',', env('GITHUB_HIDE_AUTHORS'));
+        $labelGroups      = explode(',', env('GITHUB_LABELS'));
         foreach ($labelGroups as &$label) {
             list($labelName, $groupName) = explode('|', $label);
 
             $labels[$labelName] = $groupName;
         }
-        $defaultGroup = $labels[$_SERVER['GITHUB_DEFAULT_GROUP']];
+        $defaultGroup = $labels[env('GITHUB_DEFAULT_GROUP')];
 
         foreach ($milestoneIssues as $k => $issue) {
             $issue['submitter'] = in_array($issue['user']['login'], $hideAuthors) ? '' : $issue['user']['login'];

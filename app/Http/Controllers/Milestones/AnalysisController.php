@@ -32,7 +32,7 @@ class AnalysisController extends Controller
         }
 
         $prs = [];
-        $team = explode(',', $_SERVER['GITHUB_HIDE_AUTHORS']);
+        $team = explode(',', env('GITHUB_HIDE_AUTHORS'));
 
         foreach ($milestoneIssues as $k => $issue) {
             if (isset($issue['pull_request']) && $issue['state'] !== 'closed') {
