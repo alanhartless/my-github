@@ -5,3 +5,5 @@ Homestead.json
 .env
 .idea
 public/assets/*
+.DS_Store
+/bootstrap/cache/*
