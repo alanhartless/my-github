@@ -48,6 +48,7 @@ Route::group(['before' => 'auth.basic'], function() {
     Route::post('delete/{login}/{repo}/{branch}', ['as' => 'delete_branch', 'uses' => 'Branches\DeleteController@deleteBranch']);
 
     // Changelog
+    Route::get('milestones/{login}/{repo}', ['as' => 'milestones', 'uses' => 'Milestones\IndexController@generate']);
     Route::get('milestone/{login}/{repo}/{milestone}/changelog', ['as' => 'changelog', 'uses' => 'Milestones\ChangelogController@generate']);
     Route::get('milestone/{login}/{repo}/{milestone}/analysis', ['as' => 'analysis', 'uses' => 'Milestones\AnalysisController@generate']);
 });

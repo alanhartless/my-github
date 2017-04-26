@@ -16,6 +16,7 @@
             </td>
             <td class="text-right">
                 <a class="btn btn-sm btn-danger" href="{{ URL.route('branches', {'login':login, 'repo':repo.name}) }}"><i class="fa fa-sitemap visible-xs"></i><span class="hidden-xs">Branches</span></a>
+                <a class="btn btn-sm btn-info" href="{{ URL.route('milestones', {'login':login, 'repo':repo.name}) }}"><i class="fa fa-sitemap visible-xs"></i><span class="hidden-xs">Milestones</span></a>
                 <a class="btn btn-sm btn-primary" href="{{ repo.html_url }}/pulls?q=author:{{ me.login }}" target="_blank">
                     <i class="fa fa-random visible-xs"></i> <span class="hidden-xs">PRs</span> <span class="badge hidden-xs">{{ repo.pulls|length }}</span>
                 </a>

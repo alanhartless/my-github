@@ -1,0 +1,33 @@
+{% extends "index" %}
+
+{% block title %}
+    Milestones for {{ login }}/{{ repo }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-responsive table-bordered">
+        <thead>
+        <tr>
+            <th>Milestone</th>
+            <th>Date Updated</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody class="searchable">
+        {% for milestone in milestones %}
+            <tr>
+                <td>
+                    <a href="{{ milestone.html_url }}" target="_blank" data-toggle="tooltip" title="{{ milestone.description }}" data-placement="bottom">{{ milestone.title }}</a>
+                </td>
+                <td class="hidden-xs">
+                    {{ milestone.updated_at|date('Y-m-d H:i') }}
+                </td>
+                <td class="text-right">
+                    <a class="btn btn-sm btn-danger" href="{{ URL.route('analysis', {'login':login, 'repo':repo, 'milestone': milestone.title}) }}"><i class="fa fa-sitemap visible-xs"></i><span class="hidden-xs">Analysis</span></a>
+                    <a class="btn btn-sm btn-info" href="{{ URL.route('changelog', {'login':login, 'repo':repo, 'milestone': milestone.title}) }}"><i class="fa fa-sitemap visible-xs"></i><span class="hidden-xs">Changelog</span></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
