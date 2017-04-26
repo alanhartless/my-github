@@ -85,6 +85,12 @@ class AnalysisController extends Controller
                     }
                 }
 
+                $pleaseTest = array_diff($team, $plusOne, [$issue['user']['login']]);
+
+                natcasesort($pleaseTest);
+                natcasesort($plusOne);
+                natcasesort($feedBackBy);
+
                 $prs[$issue['number']] = [
                     'author' => $issue['user']['login'],
                     'name' => $issue['title'],
@@ -93,6 +99,7 @@ class AnalysisController extends Controller
                     'hasConflicts' => $hasConflicts,
                     'needsDocs' => $needsDocumentation,
                     'plusOne' => $plusOne,
+                    'pleaseTest' => $pleaseTest,
                     'feedbackBy' => $feedBackBy
                 ];
             }

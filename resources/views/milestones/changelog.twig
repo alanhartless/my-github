@@ -17,7 +17,9 @@
 {% endfor %}
 {% if acknowledgements %}
 
-A big thank you to the following community members for contributing to this release: {{ acknowledgements }}
+A big thank you to the following community members for contributing to this release either by code or bug report: {{ acknowledgements }}
 {% endif %}
 </pre>
+
+{% for label, prs in pullRequests %}{% for pr in prs %}{{ pr.number }},{% endfor %}{% endfor %}
 {% endblock %}

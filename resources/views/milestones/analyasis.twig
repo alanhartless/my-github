@@ -1,7 +1,7 @@
 {% extends "index" %}
 
 {% block title %}
-    Analysis for {{ milestone.name }}
+    Analysis for {{ milestone.title }}
 {% endblock %}
 
 {% block content %}
@@ -17,9 +17,10 @@
         <th>Needs Documentation?</th>
         <th>Plus One By</th>
         <th>Feedback Given By</th>
+        <th>Needs Plus One From</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody class="searchable">
     {% for pullId, pr in pullRequests %}
     <tr>
         <td>{{ pr.author }}</td>
@@ -30,6 +31,7 @@
         <td>{% if (pr.needsDocs) %}YES{% else %}NO{% endif %}</td>
         <td>{% for key, approved in pr.plusOne %}{{ approved }}, {% endfor %}</td>
         <td>{% for key, feedback in pr.feedbackBy %}{{ feedback }}, {% endfor %}</td>
+        <td>{% for key, available in pr.pleaseTest %}{{ available }}, {% endfor %}</td>
     </tr>
     {% endfor %}
     </tbody>
