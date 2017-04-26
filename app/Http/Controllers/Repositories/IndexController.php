@@ -17,10 +17,16 @@ class IndexController extends Controller
         $paginator     = new ResultPager(GitHub::connection());
         $repositories  = $paginator->fetchAll(GitHub::me(), 'repositories');
         $organizations = $paginator->fetchAll(GitHub::me(), 'organizations');
+        $ignoredOrgs   = explode(',', env('GITHUB_IGNORE_ORGS', ''));
 
         $this->getIssuesAndPRs($repositories, $me, $me);
 
-        foreach ($organizations as &$org) {
+        foreach ($organizations as $i => &$org) {
+            if (in_array($org['login'], $ignoredOrgs)) {
+                unset($organizations[$i]);
+                continue;
+            }
+
             $paginator           = new ResultPager(GitHub::connection());
             $org['repositories'] = $paginator->fetchAll(GitHub::organization(), 'repositories', [$org['login'], ['sort' => '']]);
 
